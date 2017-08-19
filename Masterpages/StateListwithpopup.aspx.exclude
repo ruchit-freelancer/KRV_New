@@ -1,0 +1,145 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/KRV.master" AutoEventWireup="true" CodeFile="StateListwithpopup.aspx.cs"
+    Inherits="Masterpages_StateListwithpopup" %>
+
+<asp:Content ID="Content3" ContentPlaceHolderID="cphHeadTitle" runat="Server">
+    State Lists
+</asp:Content>
+<asp:Content ID="Content4" ContentPlaceHolderID="cphContent" runat="Server">
+    <telerik:RadCodeBlock ID="RadCodeBlock1" runat="server">
+
+        <script type="text/javascript">
+            function CloseAndRebind() {
+                //window.location.reload();            
+                $find("<%= RadAjaxPanel1.ClientID %>").ajaxRequest("Rebind");
+            }
+
+            function GetRadWindow() {
+                var oWindow = null;
+                if (window.radWindow) oWindow = window.radWindow; //Will work in Moz in all cases, including clasic dialog
+                else if (window.frameElement.radWindow) oWindow = window.frameElement.radWindow; //IE (and Moz as well)				
+                return oWindow;
+            }
+        </script>
+
+    </telerik:RadCodeBlock>
+    <telerik:RadAjaxPanel ID="RadAjaxPanel1" runat="server" LoadingPanelID="RadAjaxLoadingPanel1">
+        <table width="90%" cellpadding="2" cellspacing="2">
+            <tr>
+                <td align="left" valign="top">
+                    <%--<asp:Label ID="lblSearch" runat="server" SkinID="Search" Text="Search: "></asp:Label>
+                <asp:TextBox ID="txtSearch" runat="server" SkinID="Search"></asp:TextBox>
+                <asp:Button ID="btnSearch" runat="server" Text="Search" OnClick="btnSearch_Click" />--%>
+                </td>
+                <td align="right" valign="top">
+                    <asp:ImageButton ID="imgAddRecord" runat="server" ImageUrl="~/App_Themes/Blue/images/add.gif"
+                        CausesValidation="false" AlternateText="Add Record" ToolTip="Add Record" OnClick="btnAddRecord_Click" />
+                </td>
+            </tr>
+            <tr>
+                <td align="left" valign="top" colspan="2">
+                    <telerik:RadGrid ID="rgSearch" runat="server" AllowFilteringByColumn="True" AllowPaging="True"
+                        AllowSorting="True" AutoGenerateColumns="False" CellSpacing="0" DataSourceID="sdsSearchRecords"
+                        GridLines="None" Skin="Sunset" OnItemDataBound="rgSearch_ItemDataBound">
+                        <HeaderContextMenu CssClass="GridContextMenu GridContextMenu_Default">
+                        </HeaderContextMenu>
+                        <MasterTableView DataSourceID="sdsSearchRecords" DataKeyNames="StateID">
+                            <CommandItemSettings ExportToPdfText="Export to PDF"></CommandItemSettings>
+                            <RowIndicatorColumn FilterControlAltText="Filter RowIndicator column">
+                                <HeaderStyle Width="20px"></HeaderStyle>
+                            </RowIndicatorColumn>
+                            <ExpandCollapseColumn FilterControlAltText="Filter ExpandColumn column">
+                                <HeaderStyle Width="20px"></HeaderStyle>
+                            </ExpandCollapseColumn>
+                            <Columns>
+                                <telerik:GridBoundColumn DataField="StateName" FilterControlAltText="Filter StateName column"
+                                    HeaderText="StateName" SortExpression="StateName" UniqueName="StateName" FilterControlWidth="300px"
+                                    HeaderStyle-Width="300px">
+                                </telerik:GridBoundColumn>
+                                <telerik:GridBoundColumn DataField="StateCode" FilterControlAltText="Filter StateCode column"
+                                    HeaderText="StateCode" SortExpression="StateCode" UniqueName="StateCode" HeaderStyle-Width="70px">
+                                </telerik:GridBoundColumn>
+                                <telerik:GridBoundColumn DataField="CreatedBy" FilterControlAltText="Filter CreatedBy column"
+                                    HeaderText="CreatedBy" SortExpression="CreatedBy" UniqueName="CreatedBy" HeaderStyle-Width="100px">
+                                </telerik:GridBoundColumn>
+                                <telerik:GridBoundColumn DataField="CreatedOn" DataType="System.DateTime" FilterControlAltText="Filter CreatedOn column"
+                                    HeaderText="CreatedOn" SortExpression="CreatedOn" UniqueName="CreatedOn" HeaderStyle-Width="70px">
+                                </telerik:GridBoundColumn>
+                                <telerik:GridBoundColumn DataField="ModifiedBy" FilterControlAltText="Filter ModifiedBy column"
+                                    HeaderText="ModifiedBy" SortExpression="ModifiedBy" UniqueName="ModifiedBy" HeaderStyle-Width="100px">
+                                </telerik:GridBoundColumn>
+                                <telerik:GridBoundColumn DataField="ModifiedOn" DataType="System.DateTime" FilterControlAltText="Filter ModifiedOn column"
+                                    HeaderText="ModifiedOn" SortExpression="ModifiedOn" UniqueName="ModifiedOn" HeaderStyle-Width="70px">
+                                </telerik:GridBoundColumn>
+                                <telerik:GridTemplateColumn AllowFiltering="false" HeaderText="Edit" HeaderStyle-Width="5px">
+                                    <ItemStyle HorizontalAlign="Center" />
+                                    <ItemTemplate>
+                                        <center>
+                                            <asp:ImageButton ToolTip="Edit" ID="imgEdit" runat="server" CommandArgument='<%# Eval("StateID") %>'
+                                                OnClick="imgEdit_Click" ImageUrl="~/App_Themes/Blue/images/edit.gif" CausesValidation="false" />
+                                        </center>
+                                        <asp:HiddenField ID="hfStateID" runat="server" Value='<%# Eval("StateID") %>' />
+                                        <asp:HiddenField ID="hfIsActive" runat="server" Value='<%# Eval("IsActive") %>' />
+                                    </ItemTemplate>
+                                </telerik:GridTemplateColumn>
+                                <telerik:GridTemplateColumn AllowFiltering="false" HeaderText="Delete" HeaderStyle-Width="5px">
+                                    <ItemStyle HorizontalAlign="Center" />
+                                    <ItemTemplate>
+                                        <center>
+                                            <asp:ImageButton ToolTip='<%# ((Eval("IsActive").ToString()=="1")?"Yes":"No") %>'
+                                                ID="imgActive" runat="server" CommandArgument='<%# Eval("StateID") %>' OnClick="imgActive_Click"
+                                                ImageUrl='<%# "~/App_Themes/Blue/images/" + ((Eval("IsActive").ToString()=="1")?"icon_active.png":"icon_deactive.png") %>'
+                                                CausesValidation="false" />
+                                        </center>
+                                    </ItemTemplate>
+                                </telerik:GridTemplateColumn>
+                                <telerik:GridTemplateColumn AllowFiltering="false" HeaderText="Purge" HeaderStyle-Width="5px">
+                                    <ItemStyle HorizontalAlign="Center" />
+                                    <ItemTemplate>
+                                        <center>
+                                            <asp:ImageButton ToolTip="Delete" ID="imgDelete" runat="server" CommandArgument='<%# Eval("StateID") %>'
+                                                OnClick="imgDelete_Click" ImageUrl="~/App_Themes/Blue/images/delete.gif" CausesValidation="false"
+                                                OnClientClick="return confirm('Are you sure you want to Delete ?');" />
+                                        </center>
+                                    </ItemTemplate>
+                                </telerik:GridTemplateColumn>
+                            </Columns>
+                            <EditFormSettings>
+                                <EditColumn FilterControlAltText="Filter EditCommandColumn column">
+                                </EditColumn>
+                            </EditFormSettings>
+                        </MasterTableView>
+                        <PagerStyle Mode="NextPrevAndNumeric" AlwaysVisible="true" />
+                        <ClientSettings>
+                            <Selecting AllowRowSelect="True" />
+                        </ClientSettings>
+                        <FilterMenu EnableImageSprites="False">
+                        </FilterMenu>
+                    </telerik:RadGrid>
+                </td>
+            </tr>
+        </table>
+        <telerik:RadWindowManager ID="RadWindowManager1" runat="server" Skin="Black" EnableViewState="false">
+            <Windows>
+                <telerik:RadWindow ID="RadWindow1" runat="server" OnClientClose="CloseAndRebind">
+                </telerik:RadWindow>
+            </Windows>
+        </telerik:RadWindowManager>
+    </telerik:RadAjaxPanel>
+    <telerik:RadAjaxLoadingPanel ID="RadAjaxLoadingPanel1" runat="server" Height="75px"
+        Width="75px" Transparency="1">
+    </telerik:RadAjaxLoadingPanel>
+    <asp:SqlDataSource ID="sdsSearchRecords" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnString %>"
+        SelectCommand="KRV_SearchStateList" SelectCommandType="StoredProcedure" UpdateCommand="KRV_SoftDeleteStateList"
+        UpdateCommandType="StoredProcedure" DeleteCommand="KRV_DeleteStateList" DeleteCommandType="StoredProcedure">
+        <SelectParameters>
+            <asp:Parameter DefaultValue="%" Name="SearchKey" Type="String" />
+        </SelectParameters>
+        <DeleteParameters>
+            <asp:Parameter DefaultValue="0" Name="StateID" Type="Int32" />
+        </DeleteParameters>
+        <UpdateParameters>
+            <asp:Parameter Name="StateID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="UserName" Type="String" />
+        </UpdateParameters>
+    </asp:SqlDataSource>
+</asp:Content>

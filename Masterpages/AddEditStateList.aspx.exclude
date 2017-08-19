@@ -1,0 +1,132 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="AddEditStateList.aspx.cs"
+    Inherits="Masterpages_AddEditStateList" %>
+
+<%@ Register Src="../UserControl/UctMessageDetails.ascx" TagName="UctMessageDetails"
+    TagPrefix="uc1" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <telerik:RadCodeBlock ID="RadCodeBlock1" runat="server">
+
+        <script type="text/javascript">
+            function CloseAndRebind(args) {
+                GetRadWindow().Close();
+                GetRadWindow().BrowserWindow.refreshGrid(args);
+                //GetRadWindow().BrowserWindow.location.reload();
+            }
+            function GetRadWindow() {
+                var oWindow = null;
+                if (window.radWindow) oWindow = window.radWindow; //Will work in Moz in all cases, including clasic dialog
+                else if (window.frameElement.radWindow) oWindow = window.frameElement.radWindow; //IE (and Moz as well)
+                return oWindow;
+            }
+            function CancelEdit() {
+                GetRadWindow().Close();
+            }
+        </script>
+
+    </telerik:RadCodeBlock>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <asp:ScriptManager ID="ScriptManager1" runat="server">
+    </asp:ScriptManager>
+    <telerik:RadAjaxPanel ID="RadAjaxPanel1" runat="server" LoadingPanelID="RadAjaxLoadingPanel1">
+        <center>
+            <uc1:UctMessageDetails ID="uctMessage" runat="server" Visible="false" />
+        </center>
+        <asp:FormView ID="fvRecords" runat="server" DefaultMode="Insert" DataKeyNames="StateID"
+            DataSourceID="sdsAddEditRecords">
+            <EditItemTemplate>
+                <asp:HiddenField ID="hfStateID" runat="server" Value='<%# Eval("StateID") %>' />
+                <table cellpadding="2" cellspacing="2">
+                    <tr>
+                        <td align="left" valign="top">
+                            State Name:
+                        </td>
+                        <td align="left" valign="top">
+                            <asp:TextBox ID="txtStateName" runat="server" Text='<%# Bind("StateName") %>' />
+                            <asp:RequiredFieldValidator ID="rfvStateNameTextBox" runat="server" ControlToValidate="txtStateName"
+                                SetFocusOnError="true" Display="Dynamic" ErrorMessage="Enter State Name"></asp:RequiredFieldValidator>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top">
+                            State Code:
+                        </td>
+                        <td align="left" valign="top">
+                            <asp:TextBox ID="txtStateCode" runat="server" Text='<%# Bind("StateCode") %>' />
+                            <asp:RequiredFieldValidator ID="rfvStateCodeTextBox" runat="server" ControlToValidate="txtStateCode"
+                                SetFocusOnError="true" Display="Dynamic" ErrorMessage="Enter State Name"></asp:RequiredFieldValidator>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top" colspan="2">
+                            <asp:Button ID="UpdateButton" runat="server" CausesValidation="True" OnClick="btnUpdate_Click"
+                                Text="Update" />
+                            &nbsp;<asp:Button ID="CloseButton" runat="server" CausesValidation="False" Text="Close"
+                                OnClientClick="CancelEdit();return false;" />
+                        </td>
+                    </tr>
+                </table>
+            </EditItemTemplate>
+            <InsertItemTemplate>
+                <table cellpadding="2" cellspacing="2">
+                    <tr>
+                        <td align="left" valign="top">
+                            State Name:
+                        </td>
+                        <td align="left" valign="top">
+                            <asp:TextBox ID="txtStateName" runat="server" Text='<%# Bind("StateName") %>' />
+                            <asp:RequiredFieldValidator ID="rfvStateNameTextBox" runat="server" ControlToValidate="txtStateName"
+                                SetFocusOnError="true" Display="Dynamic" ErrorMessage="Enter State Name"></asp:RequiredFieldValidator>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top">
+                            State Code:
+                        </td>
+                        <td align="left" valign="top">
+                            <asp:TextBox ID="txtStateCode" runat="server" Text='<%# Bind("StateCode") %>' />
+                            <asp:RequiredFieldValidator ID="rfvStateCodeTextBox" runat="server" ControlToValidate="txtStateCode"
+                                SetFocusOnError="true" Display="Dynamic" ErrorMessage="Enter State Name"></asp:RequiredFieldValidator>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top" colspan="2">
+                            <asp:Button ID="SaveButton" runat="server" CausesValidation="True" OnClick="btnSave_Click"
+                                Text="Save" />
+                            &nbsp;<asp:Button ID="CloseButton" runat="server" CausesValidation="False" Text="Close"
+                                OnClientClick="CancelEdit();return false;" />
+                        </td>
+                    </tr>
+                </table>
+            </InsertItemTemplate>
+        </asp:FormView>
+    </telerik:RadAjaxPanel>
+    <telerik:RadAjaxLoadingPanel ID="RadAjaxLoadingPanel1" runat="server" Height="75px"
+        Width="75px" Transparency="1">
+    </telerik:RadAjaxLoadingPanel>
+    <asp:SqlDataSource ID="sdsAddEditRecords" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnString %>"
+        InsertCommand="KRV_AddStateList" InsertCommandType="StoredProcedure" SelectCommand="KRV_GetStateListByID"
+        SelectCommandType="StoredProcedure" UpdateCommand="KRV_UpdateStateList" UpdateCommandType="StoredProcedure"
+        CancelSelectOnNullParameter="false">
+        <SelectParameters>
+            <asp:Parameter DefaultValue="0" Name="StateID" Type="Int32" />
+        </SelectParameters>
+        <UpdateParameters>
+            <asp:Parameter Name="StateID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="StateName" Type="String" />
+            <asp:Parameter Name="StateCode" Type="String" />
+            <asp:Parameter Name="UserName" Type="String" />
+        </UpdateParameters>
+        <InsertParameters>
+            <asp:Parameter Name="StateName" Type="String" />
+            <asp:Parameter Name="StateCode" Type="String" />
+            <asp:Parameter Name="UserName" Type="String" />
+        </InsertParameters>
+    </asp:SqlDataSource>
+    </form>
+</body>
+</html>

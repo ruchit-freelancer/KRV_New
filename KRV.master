@@ -1,0 +1,67 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="KRV.master.cs" Inherits="KRV" %>
+
+<%@ Register Src="UserControl/UctMenu.ascx" TagName="UctMenu" TagPrefix="uc1" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Welcome to KRV Trip Portal</title>
+    <link href="App_Themes/Blue/Blue.css" rel="stylesheet" type="text/css" />
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+    <form id="form1" runat="server">
+    <asp:ScriptManager ID="ScriptManager1" runat="server">
+    </asp:ScriptManager>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <%--<tr>
+            <td align="left" valign="middle" class="Header">
+                &nbsp;
+            </td>
+        </tr>--%>
+        <tr>
+            <td align="center" class="top" valign="middle">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td align="left" valign="top">
+                            <asp:ContentPlaceHolder ID="cphMenu" runat="server">
+                                <uc1:UctMenu ID="UctMenu1" runat="server" />
+                            </asp:ContentPlaceHolder>
+                        </td>
+                        <td align="right" valign="bottom" style="position: relative; z-index: 100000; padding-top: 5px;"
+                            width="200px">
+                            Welcome
+                            <asp:LoginName ID="LoginName1" runat="server" CssClass="LoginName" />
+                            &nbsp;
+                            <asp:LoginStatus ID="LoginStatus1" runat="server" LogoutAction="RedirectToLoginPage"
+                                OnLoggingOut="LoginStatus1_LoggingOut" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td align="left" valign="top" class="headTitle">
+                <asp:ContentPlaceHolder ID="cphHeadTitle" runat="server">
+                    Login
+                </asp:ContentPlaceHolder>
+            </td>
+        </tr>
+        <tr>
+            <td align="left" valign="top" class="content">
+                <center>
+                    <asp:ContentPlaceHolder ID="cphContent" runat="server">
+                        Content
+                    </asp:ContentPlaceHolder>
+                </center>
+            </td>
+        </tr>
+        <tr>
+            <td align="left" valign="top" class="footer">
+                KRV Trucking, LLC | 195 Prospect Plains Road, Monroe, NJ 08831
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+</html>

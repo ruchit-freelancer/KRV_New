@@ -1,0 +1,140 @@
+body
+{
+    font-family: Helvetica, Arial, Verdana, Calibri, Tahoma;
+    font-size: 11px;
+    background: #90140C url(images/stripes.gif) repeat-x;
+    margin: 0;
+    padding: 0;
+    letter-spacing: 1px;
+}
+
+.LoginName
+{
+    text-transform:lowercase;
+}
+
+.top
+{
+    height: 17px;
+    overflow: hidden;
+    width: 100%;
+    background: #000 url(images/stripes_small.gif) repeat-x; /*background-color:#000000;*/
+    color: #fff;
+    text-align: right;
+    padding-right: 10px;
+}
+
+.top a
+{
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.top a:hover
+{
+    color: #C09067;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.footer
+{
+    padding: 5px 5px 5px 5px;
+    color: #FFFFFF;
+    text-decoration: none;
+    background-color: #000000;
+}
+
+.footer a
+{
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.footer a:hover
+{
+    color: #C09067;
+    text-decoration: none;
+}
+
+.headTitle
+{
+    height: 40px;
+    background: #FD9339 url(images/hover_list.jpg) repeat-x;
+    color: #ffffff;
+    border: 1px solid #783C1C;
+    vertical-align: middle;
+    padding-left: 15px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.content
+{
+    background-color: #ffffff;
+    padding: 5px 5px 5px 5px;
+}
+
+.content h1
+{
+    color: #8A0700;
+    margin: 0 0 0 0;
+    padding: 0 0 0 5px;
+    font-size: 14px;
+}
+
+.SuccessMessage
+{
+    font-family: Verdana;
+    font-size: 11px;
+    font-style: normal;
+    color: Green;
+    font-weight: bold;
+}
+
+.FailerMessage
+{
+    font-family: Verdana;
+    font-size: 11px;
+    font-style: normal;
+    color: Red;
+    font-weight: bold;
+}
+
+.textboxRequired
+{
+    width: 250px;
+    border: solid 1px Red;
+}
+
+.textboxCustom
+{
+}
+
+.textboxCustomRequired
+{
+    border: solid 1px Red;
+}
+
+.titleRequired
+{
+    font-weight: bold;
+    color: Red;
+}
+.NormalText
+{
+    font-family: Tahoma;
+    font-size: 11px;
+    font-style: normal;
+    color: #1f1f1f;
+    vertical-align: middle;
+}
+
+.Header
+{
+    background-color: #ffffff;
+    background-image:url('images/KRV-PORTAL-LOGO.jpg');
+    background-repeat:no-repeat;
+    height:80px;
+}

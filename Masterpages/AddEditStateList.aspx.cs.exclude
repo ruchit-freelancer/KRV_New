@@ -1,0 +1,81 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.Security;
+
+public partial class Masterpages_AddEditStateList : System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
+        {
+            if (Request["ID"] != null)
+            {
+                int id = Int32.Parse(Request["ID"].ToString());
+                if (id > 0)
+                {
+                    sdsAddEditRecords.SelectParameters["StateID"].DefaultValue = id.ToString();
+                    fvRecords.ChangeMode(FormViewMode.Edit);
+                    fvRecords.DataBind();
+                }
+            }
+            else
+            {
+                ClientScript.RegisterStartupScript(Page.GetType(), "mykey", "CloseAndRebind();", true);
+            }
+        }
+    }
+
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+        MembershipUser user = Membership.GetUser();
+        if (user != null)
+        {
+            sdsAddEditRecords.InsertParameters["StateName"].DefaultValue = ((TextBox)fvRecords.FindControl("txtStateName")).Text;
+            sdsAddEditRecords.InsertParameters["StateCode"].DefaultValue = ((TextBox)fvRecords.FindControl("txtStateCode")).Text;
+            sdsAddEditRecords.InsertParameters["UserName"].DefaultValue = user.UserName;
+            int result = sdsAddEditRecords.Insert();
+            if (result > 0)
+            {
+                uctMessage.SetMessage(true, WebHelper.GetSaveSuccess());
+                fvRecords.ChangeMode(FormViewMode.Insert);
+                fvRecords.DataBind();
+
+            }
+            else
+            {
+                uctMessage.SetMessage(false, WebHelper.GetSaveFail());
+            }
+            uctMessage.Visible = true;
+        }
+    }
+
+    protected void btnUpdate_Click(object sender, EventArgs e)
+    {
+        MembershipUser user = Membership.GetUser();
+        if (user != null)
+        {
+            sdsAddEditRecords.UpdateParameters["StateID"].DefaultValue = ((HiddenField)fvRecords.FindControl("hfStateID")).Value;
+            sdsAddEditRecords.UpdateParameters["StateName"].DefaultValue = ((TextBox)fvRecords.FindControl("txtStateName")).Text;
+            sdsAddEditRecords.UpdateParameters["StateCode"].DefaultValue = ((TextBox)fvRecords.FindControl("txtStateCode")).Text;
+            sdsAddEditRecords.UpdateParameters["UserName"].DefaultValue = user.UserName;
+            int result = sdsAddEditRecords.Update();
+            if (result > 0)
+            {
+                uctMessage.SetMessage(true, WebHelper.GetUpdateSuccess());
+                sdsAddEditRecords.SelectParameters["StateID"].DefaultValue = Request["ID"].ToString();
+                fvRecords.ChangeMode(FormViewMode.Edit);
+                fvRecords.DataBind();
+                //ClientScript.RegisterStartupScript(Page.GetType(), "mykey", "CloseAndRebind();", true);
+            }
+            else
+            {
+                uctMessage.SetMessage(false, WebHelper.GetUpdateFail());
+            }
+            uctMessage.Visible = true;
+        }
+    }
+}

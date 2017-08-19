@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" >
+  <siteMapNode url="www.vtechnology.info" title="VTechnology"  description="VTechnology">
+    <siteMapNode url="~/Default.aspx" title="Home"  description="Home" />
+    <siteMapNode url="" title="Masters"  description="Masters">
+      <siteMapNode url="~/Masterpages/ExpenseTypes.aspx" title="Expense Types" description="Expense Types" />
+      <siteMapNode url="~/Masterpages/IncidentTypes.aspx" title="Incident Types" description="Incident Types" />
+      <siteMapNode url="~/Masterpages/MaintenanceTypes.aspx" title="Maintenance Types" description="Maintenance Types" />
+      <siteMapNode url="~/Masterpages/StateList.aspx" title="State List" description="State List" />
+      <siteMapNode url="~/Masterpages/StateRoutesList.aspx" title="State Routes" description="State Routes" />
+      <siteMapNode url="~/Masterpages/StopTypes.aspx" title="Stop Types" description="Stop Types" />
+      <siteMapNode url="~/Masterpages/TripTypes.aspx" title="Trip Types" description="Trip Types" />
+      <siteMapNode url="~/Masterpages/Customers.aspx" title="Customers" description="Customers" />
+      <siteMapNode url="~/Masterpages/Locations.aspx" title="Locations" description="Locations" />
+      <siteMapNode url="~/Masterpages/Drivers.aspx" title="Drivers" description="Drivers" />
+      <siteMapNode url="~/Masterpages/Trucks.aspx" title="Trucks" description="Trucks" />
+      <siteMapNode url="~/Masterpages/Menu.aspx" title="Menu" description="Menu" />
+    </siteMapNode>
+    <siteMapNode url="~/TruckMaintenance.aspx" title="Truck Maintenance" description="Truck Maintenance" />
+    <siteMapNode url="~/FuelHistory.aspx" title="Fuel History" description="Fuel History" />
+    <siteMapNode url="~/UserManagement/ChangePassword.aspx" title="Change Password" description="Change Password" />
+  </siteMapNode>
+</siteMap>

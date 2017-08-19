@@ -1,0 +1,23 @@
+<root>
+
+  <tools name="Formatting" enabled="true" dockable="true">
+    <tool Name="JustifyLeft" />
+    <tool Name="JustifyCenter" />
+    <tool Name="JustifyRight" />
+    <tool Name="InsertUnorderedList" />
+    <tool separator="true" />
+    <tool name="Bold" />
+    <tool name="Italic" />
+    <tool name="Underline" />
+    <tool separator="true" />
+    <tool name="ForeColor" />
+    <tool name="BackColor" />
+    <tool separator="true" />
+    <tool name="Superscript" />
+    <tool name="Subscript" />
+    <tool separator="true" />
+    <tool name="InsertTable" />
+    <tool separator="true" />
+    <tool name="InsertSymbol" />
+  </tools>
+</root>

@@ -1,0 +1,127 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.Security;
+using Telerik.Web.UI;
+
+public partial class Masterpages_StateListwithpopup : System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
+        {
+            rgSearch.PageSize = 50;
+            BindGrid();
+        }
+    }
+
+    void BindGrid()
+    {
+        //if (txtSearch.Text.Trim().Length > 0)
+        //{
+        //    sdsSearchRecords.SelectParameters["SearchKey"].DefaultValue = txtSearch.Text.Trim();
+        //}
+        //else
+        //{
+        //    sdsSearchRecords.SelectParameters["SearchKey"].DefaultValue = "%";
+        //}
+        rgSearch.Rebind();
+    }
+
+    protected void btnSearch_Click(object sender, EventArgs e)
+    {
+        BindGrid();
+    }
+
+    protected void btnAddRecord_Click(object sender, EventArgs e)
+    {
+        string id = "0";
+        popUp(id, ShowWindowPopUp(((ImageButton)sender)), "State List");
+    }
+
+    protected void popUp(string args, RadWindow window, string title)
+    {
+        window.Title = title;
+        window.NavigateUrl = WebHelper.ApplicationPath(Request) + "/Masterpages/AddEditStateList.aspx?ID=" + args;
+    }
+
+    private RadWindow ShowWindowPopUp(ImageButton imgProperties)//, string systemId)
+    {
+        RadWindow window = RadWindow1;
+        window.EnableEmbeddedSkins = false;
+        window.Skin = "Black";
+        window.ShowContentDuringLoad = false;
+        window.VisibleOnPageLoad = true;
+        window.VisibleStatusbar = false;
+        window.ReloadOnShow = true;
+        window.Behaviors = WindowBehaviors.Reload | WindowBehaviors.Close;
+        window.Modal = true;
+        window.Width = Unit.Parse("800px");
+        window.Height = Unit.Parse("600px");
+        window.OpenerElementID = imgProperties.ClientID;
+        window.AutoSize = false;
+        return window;
+    }
+
+    protected void imgEdit_Click(object sender, EventArgs e)
+    {
+        string id = ((ImageButton)sender).CommandArgument.ToString();
+        popUp(id, ShowWindowPopUp(((ImageButton)sender)), "State List");
+    }
+
+    protected void imgActive_Click(object sender, EventArgs e)
+    {
+        MembershipUser user = Membership.GetUser();
+        if (user != null)
+        {
+            string id = ((ImageButton)sender).CommandArgument.ToString();
+            sdsSearchRecords.UpdateParameters["StateID"].DefaultValue = id;
+            sdsSearchRecords.UpdateParameters["UserName"].DefaultValue = user.UserName;
+            sdsSearchRecords.Update();
+            rgSearch.Rebind();
+        }
+    }
+
+    protected void imgDelete_Click(object sender, EventArgs e)
+    {
+        string id = ((ImageButton)sender).CommandArgument.ToString();
+        sdsSearchRecords.DeleteParameters["StateID"].DefaultValue = id;
+        sdsSearchRecords.Delete();
+        rgSearch.Rebind();
+    }
+
+    protected override void RaisePostBackEvent(IPostBackEventHandler sourceControl, string eventArgument)
+    {
+        base.RaisePostBackEvent(sourceControl, eventArgument);
+        if (sourceControl is RadAjaxPanel)
+        {
+            if (eventArgument == "Rebind")
+            {
+                BindGrid();
+            }
+        }
+    }
+    protected void rgSearch_ItemDataBound(object sender, GridItemEventArgs e)
+    {
+        if (e.Item is GridDataItem)
+        {
+            ImageButton imgEdit = (ImageButton)e.Item.FindControl("imgEdit");
+            ImageButton imgDelete = (ImageButton)e.Item.FindControl("imgDelete");
+            HiddenField hfIsActive = (HiddenField)e.Item.FindControl("hfIsActive");
+            if (Int32.Parse(hfIsActive.Value) == 0)
+            {
+                e.Item.BackColor = System.Drawing.Color.LightGray;
+                imgEdit.Visible = false;
+                imgDelete.Visible = true;
+            }
+            else
+            {
+                imgEdit.Visible = true;
+                imgDelete.Visible = false;
+            }
+        }
+    }
+}

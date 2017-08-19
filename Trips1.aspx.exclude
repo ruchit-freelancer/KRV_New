@@ -1,0 +1,1006 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/KRV.master" AutoEventWireup="true" CodeFile="Trips1.aspx.cs"
+    Inherits="Trips1" %>
+
+<asp:Content ID="Content3" ContentPlaceHolderID="cphHeadTitle" runat="Server">
+    Trips
+</asp:Content>
+<asp:Content ID="Content4" ContentPlaceHolderID="cphContent" runat="Server">
+    <%--<telerik:RadCodeBlock ID="RadCodeBlock1" runat="server">
+
+        <script type="text/javascript">
+            //<![CDATA[
+
+            function onTabSelecting(sender, args) {
+                var tabStrip = $find("<%= rtsTrips.ClientID %>");
+                var tabs = tabStrip.get_tabs();
+                var tab = args.get_tab().get_text();
+                if (tab == "Trips") {
+                    tabs.getTab(1).set_enabled(false);
+                    tabs.getTab(2).set_enabled(false);
+                    tabs.getTab(3).set_enabled(false);
+                    tabs.getTab(4).set_enabled(false);
+                }
+                if (tabStrip.get_selectedTab().get_text() == "Trips") {
+                    tabs.getTab(1).set_enabled(false);
+                    tabs.getTab(2).set_enabled(false);
+                    tabs.getTab(3).set_enabled(false);
+                    tabs.getTab(4).set_enabled(false);
+                }
+            }
+            //]]>
+        </script>
+
+    </telerik:RadCodeBlock>--%>
+    <telerik:RadAjaxPanel ID="RadAjaxPanel1" runat="server" LoadingPanelID="RadAjaxLoadingPanel1">
+        <asp:HiddenField ID="hfTripID" runat="server" Value="0" />
+        <telerik:RadTabStrip ID="rtsTrips" runat="server" Skin="Black" MultiPageID="RadMultiPage1"
+            SelectedIndex="0" CssClass="tabStrip">
+            <%-- OnClientTabSelecting="onTabSelecting"--%>
+            <Tabs>
+                <telerik:RadTab Text="Trips" PageViewID="rpvTrips">
+                </telerik:RadTab>
+                <telerik:RadTab Text="Trip Stops" PageViewID="rpvTripStops" Enabled="false">
+                </telerik:RadTab>
+                <telerik:RadTab Text="Trip Routes" PageViewID="rpvTripRoutes" Enabled="false">
+                </telerik:RadTab>
+                <telerik:RadTab Text="Trip Incidents" PageViewID="rpvTripIncidents" Enabled="false">
+                </telerik:RadTab>
+                <telerik:RadTab Text="State Travelled" PageViewID="rpvStateTravelled" Enabled="false">
+                </telerik:RadTab>
+            </Tabs>
+        </telerik:RadTabStrip>
+        <telerik:RadMultiPage ID="RadMultiPage1" runat="server" SelectedIndex="0">
+            <telerik:RadPageView ID="rpvTrips" runat="server">
+                <telerik:RadGrid ID="rgSearch" runat="server" AllowFilteringByColumn="True" AllowPaging="True"
+                    AllowAutomaticDeletes="true" AllowAutomaticInserts="false" AllowAutomaticUpdates="true"
+                    ShowStatusBar="true" AllowSorting="True" AutoGenerateColumns="False" CellSpacing="0"
+                    DataSourceID="sdsAddEditRecords" GridLines="None" Skin="Sunset" OnInsertCommand="RadGrid1_InsertCommand"
+                    OnUpdateCommand="RadGrid1_UpdateCommand" OnItemDeleted="RadGrid1_ItemDeleted">
+                    <HeaderContextMenu CssClass="GridContextMenu GridContextMenu_Default">
+                    </HeaderContextMenu>
+                    <MasterTableView DataSourceID="sdsAddEditRecords" DataKeyNames="TripID" CommandItemDisplay="Top">
+                        <EditFormSettings EditFormType="Template">
+                            <FormTemplate>
+                                <h1>
+                                    New Trip</h1>
+                                <hr />
+                                <table cellpadding="2" cellspacing="2">
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            Select Truck:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <telerik:RadComboBox ID="rcmbTrucks" runat="server" DataSourceID="sdsTrucks" DataTextField="TruckNo"
+                                                DataValueField="TruckID" MarkFirstMatch="true" SelectedValue='<%# Eval("TruckID") %>'>
+                                            </telerik:RadComboBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            Select Driver:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <telerik:RadComboBox ID="rcmbDriver" runat="server" DataSourceID="sdsDrivers" DataTextField="DriverName"
+                                                DataValueField="DriverID" MarkFirstMatch="true" SelectedValue='<%# Eval("DriverID") %>'>
+                                            </telerik:RadComboBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            Trip Date:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <telerik:RadDatePicker ID="rdtpTripDate" runat="server" TabIndex="3" Culture="English (United States)"
+                                                Skin="Sunset" DbSelectedDate='<%# Bind("TripDate") %>'>
+                                                <Calendar ID="Calendar3" Skin="Sunset" runat="server" UseColumnHeadersAsSelectors="True"
+                                                    UseRowHeadersAsSelectors="True">
+                                                </Calendar>
+                                                <DateInput ID="DateInput3" InvalidStyleDuration="100" runat="server" LabelCssClass="radLabelCss_Sunset"
+                                                    Skin="Sunset" Width="" DateFormat="MM-dd-yyyy" DisplayDateFormat="MM-dd-yyyy"
+                                                    Font-Bold="true" ForeColor="Black">
+                                                </DateInput>
+                                                <DatePopupButton CssClass="" />
+                                            </telerik:RadDatePicker>
+                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="rdtpTripDate"
+                                                SetFocusOnError="true" Display="Dynamic" ErrorMessage="Enter Trip Date"></asp:RequiredFieldValidator>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            Type of Trip:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <telerik:RadComboBox ID="rcmbTripType" runat="server" DataSourceID="sdsTripTypes"
+                                                DataTextField="TripType" DataValueField="TripTypeID" MarkFirstMatch="true" SelectedValue='<%# Eval("TripTypeID") %>'>
+                                            </telerik:RadComboBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            Trip Start:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <telerik:RadDatePicker ID="rdtpTripStart" runat="server" TabIndex="3" Culture="English (United States)"
+                                                Skin="Sunset" DbSelectedDate='<%# Bind("TripStart") %>'>
+                                                <Calendar ID="Calendar1" Skin="Sunset" runat="server" UseColumnHeadersAsSelectors="True"
+                                                    UseRowHeadersAsSelectors="True">
+                                                </Calendar>
+                                                <DateInput ID="DateInput1" InvalidStyleDuration="100" runat="server" LabelCssClass="radLabelCss_Sunset"
+                                                    Skin="Sunset" Width="" DateFormat="MM-dd-yyyy" DisplayDateFormat="MM-dd-yyyy"
+                                                    Font-Bold="true" ForeColor="Black">
+                                                </DateInput>
+                                                <DatePopupButton CssClass="" />
+                                            </telerik:RadDatePicker>
+                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" ControlToValidate="rdtpTripStart"
+                                                SetFocusOnError="true" Display="Dynamic" ErrorMessage="Enter Trip Start Date"></asp:RequiredFieldValidator>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            Trip End:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <telerik:RadDatePicker ID="rdtpTripEnd" runat="server" TabIndex="3" Culture="English (United States)"
+                                                Skin="Sunset" DbSelectedDate='<%# Bind("TripEnd") %>'>
+                                                <Calendar ID="Calendar2" Skin="Sunset" runat="server" UseColumnHeadersAsSelectors="True"
+                                                    UseRowHeadersAsSelectors="True">
+                                                </Calendar>
+                                                <DateInput ID="DateInput2" InvalidStyleDuration="100" runat="server" LabelCssClass="radLabelCss_Sunset"
+                                                    Skin="Sunset" Width="" DateFormat="MM-dd-yyyy" DisplayDateFormat="MM-dd-yyyy"
+                                                    Font-Bold="true" ForeColor="Black">
+                                                </DateInput>
+                                                <DatePopupButton CssClass="" />
+                                            </telerik:RadDatePicker>
+                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" ControlToValidate="rdtpTripEnd"
+                                                SetFocusOnError="true" Display="Dynamic" ErrorMessage="Enter Trip Start Date"></asp:RequiredFieldValidator>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            Start Odometer:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <telerik:RadNumericTextBox ID="txtStartOdometer" runat="server" Type="Number" InvalidStyleDuration="100"
+                                                Text='<%# Eval("StartOdometer") %>'>
+                                                <NumberFormat AllowRounding="True" KeepNotRoundedValue="False" />
+                                            </telerik:RadNumericTextBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            End Odometer:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <telerik:RadNumericTextBox ID="txtEndOdometer" runat="server" Type="Number" InvalidStyleDuration="100"
+                                                Text='<%# Eval("EndOdometer") %>'>
+                                                <NumberFormat AllowRounding="True" KeepNotRoundedValue="False" />
+                                            </telerik:RadNumericTextBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle" colspan="2">
+                                            <asp:ImageButton ID="imgUpdate" runat="server" CommandName='<%# (Container is GridEditFormInsertItem) ? "PerformInsert" : "Update" %>'
+                                                AlternateText="Update" ToolTip="Update" ImageUrl="~/App_Themes/Blue/images/savebutton.gif" />
+                                            <asp:ImageButton ID="imgCancel" runat="server" CommandName="Cancel" AlternateText="Cancel"
+                                                ToolTip="Cancel" ImageUrl="~/App_Themes/Blue/images/cancelbutton.gif" CausesValidation="false" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </FormTemplate>
+                        </EditFormSettings>
+                        <HeaderStyle HorizontalAlign="Center" />
+                        <Columns>
+                            <telerik:GridEditCommandColumn ButtonType="ImageButton" EditImageUrl="~/App_Themes/Blue/images/edit.gif"
+                                ItemStyle-Width="5px" HeaderText="Edit">
+                                <HeaderStyle Width="5px" />
+                                <ItemStyle HorizontalAlign="Center" />
+                            </telerik:GridEditCommandColumn>
+                            <telerik:GridBoundColumn DataField="TruckNo" FilterControlAltText="Filter TruckNo column"
+                                HeaderText="TruckNo" SortExpression="TruckNo" UniqueName="TruckNo" FilterControlWidth="70px"
+                                HeaderStyle-Width="70px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridBoundColumn DataField="DriverName" FilterControlAltText="Filter DriverName column"
+                                HeaderText="Driver Name" SortExpression="DriverName" UniqueName="DriverName"
+                                FilterControlWidth="100px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridBoundColumn DataField="TripDate" FilterControlAltText="Filter TripDate column"
+                                HeaderText="Date" SortExpression="TripDate" UniqueName="TripDate" FilterControlWidth="70px"
+                                HeaderStyle-Width="70px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridBoundColumn DataField="TripType" FilterControlAltText="Filter TripType column"
+                                HeaderText="TripType" SortExpression="TripType" UniqueName="TripType" FilterControlWidth="70px"
+                                HeaderStyle-Width="70px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridBoundColumn DataField="TripStart" FilterControlAltText="Filter TripStart column"
+                                HeaderText="TripStart" SortExpression="TripStart" UniqueName="TripStart" FilterControlWidth="70px"
+                                HeaderStyle-Width="70px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridBoundColumn DataField="TripEnd" FilterControlAltText="Filter TripEnd column"
+                                HeaderText="TripEnd" SortExpression="TripEnd" UniqueName="TripEnd" FilterControlWidth="70px"
+                                HeaderStyle-Width="70px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridBoundColumn DataField="StartOdometer" FilterControlAltText="Filter StartOdometer column"
+                                HeaderText="StartOdometer" SortExpression="StartOdometer" UniqueName="StartOdometer"
+                                FilterControlWidth="70px" HeaderStyle-Width="70px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridBoundColumn DataField="EndOdometer" FilterControlAltText="Filter EndOdometer column"
+                                HeaderText="EndOdometer" SortExpression="EndOdometer" UniqueName="EndOdometer"
+                                FilterControlWidth="70px" HeaderStyle-Width="70px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridTemplateColumn AllowFiltering="false" HeaderText="Created By" HeaderStyle-Width="150px">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblCreatedBy" runat="server" Text='<%# Eval("CreatedBy") + "<br/>" + Eval("CreatedOn") %>'></asp:Label>
+                                </ItemTemplate>
+                            </telerik:GridTemplateColumn>
+                            <telerik:GridTemplateColumn AllowFiltering="false" HeaderText="Modified By" HeaderStyle-Width="150px">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblModifiedBy" runat="server" Text='<%# Eval("ModifiedBy") + "<br/>" + Eval("ModifiedOn") %>'></asp:Label>
+                                </ItemTemplate>
+                            </telerik:GridTemplateColumn>
+                            <telerik:GridTemplateColumn AllowFiltering="false" HeaderText="Details" HeaderStyle-Width="5px">
+                                <ItemStyle HorizontalAlign="Center" />
+                                <ItemTemplate>
+                                    <center>
+                                        <asp:ImageButton ID="imgDetails" runat="server" CommandArgument='<%# Eval("TripID") %>'
+                                            ImageUrl="~/App_Themes/Blue/images/details.jpg" CausesValidation="false" OnClick="imgDetails_Click" />
+                                    </center>
+                                </ItemTemplate>
+                            </telerik:GridTemplateColumn>
+                            <telerik:GridTemplateColumn AllowFiltering="false" HeaderText="Delete" HeaderStyle-Width="5px">
+                                <ItemStyle HorizontalAlign="Center" />
+                                <ItemTemplate>
+                                    <center>
+                                        <asp:ImageButton ToolTip='<%# ((Eval("IsActive").ToString()=="1")?"Yes":"No") %>'
+                                            ID="imgActive" runat="server" CommandArgument='<%# Eval("TripID") %>' ImageUrl='<%# "~/App_Themes/Blue/images/" + ((Eval("IsActive").ToString()=="1")?"icon_active.png":"icon_deactive.png") %>'
+                                            CausesValidation="false" OnClick="imgActive_Click" />
+                                    </center>
+                                </ItemTemplate>
+                            </telerik:GridTemplateColumn>
+                            <telerik:GridButtonColumn ConfirmText="Are you sure want to purge this record?" ConfirmDialogType="RadWindow"
+                                ConfirmTitle="Purge Record" ButtonType="ImageButton" CommandName="Delete" Text="Purge"
+                                UniqueName="DeleteColumn" HeaderText="Purge">
+                                <ItemStyle HorizontalAlign="Center" Width="5px" />
+                                <HeaderStyle Width="5px" />
+                            </telerik:GridButtonColumn>
+                        </Columns>
+                    </MasterTableView>
+                    <PagerStyle Mode="NextPrevAndNumeric" AlwaysVisible="true" />
+                    <ClientSettings>
+                        <Selecting AllowRowSelect="True" />
+                    </ClientSettings>
+                    <FilterMenu EnableImageSprites="False">
+                    </FilterMenu>
+                </telerik:RadGrid>
+            </telerik:RadPageView>
+            <telerik:RadPageView ID="rpvTripStops" runat="server">
+                <telerik:RadGrid ID="rgTripStops" runat="server" AllowFilteringByColumn="True" AllowPaging="True"
+                    AllowAutomaticDeletes="true" AllowAutomaticInserts="false" AllowAutomaticUpdates="true"
+                    ShowStatusBar="true" AllowSorting="True" AutoGenerateColumns="False" CellSpacing="0"
+                    DataSourceID="sdsTripStops" GridLines="None" Skin="Sunset" OnInsertCommand="rgTripStops_InsertCommand"
+                    OnUpdateCommand="rgTripStops_UpdateCommand" OnItemDeleted="rgTripStops_ItemDeleted">
+                    <HeaderContextMenu CssClass="GridContextMenu GridContextMenu_Default">
+                    </HeaderContextMenu>
+                    <MasterTableView DataSourceID="sdsTripStops" DataKeyNames="StopID" CommandItemDisplay="Top">
+                        <EditFormSettings EditFormType="Template">
+                            <FormTemplate>
+                                <h1>
+                                    Trip-Stops Details</h1>
+                                <hr />
+                                <table cellpadding="2" cellspacing="2">
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            Select Customer:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <telerik:RadComboBox ID="rcmbCustomers" runat="server" DataSourceID="sdsCustomers"
+                                                DataTextField="CustomerName" DataValueField="CustomerID" MarkFirstMatch="true"
+                                                SelectedValue='<%# Eval("CustomerID") %>'>
+                                            </telerik:RadComboBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            Stop Index:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <asp:TextBox ID="txtStopIndex" runat="server" Text='<%# Eval("StopIndex") %>'></asp:TextBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            Type of Stop:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <telerik:RadComboBox ID="rcmbStopTypes" runat="server" DataSourceID="sdsStopTypes"
+                                                DataTextField="StopType" DataValueField="StopTypeID" MarkFirstMatch="true" SelectedValue='<%# Eval("StopTypeID") %>'>
+                                            </telerik:RadComboBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            BOL Number:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <asp:TextBox ID="txtBOLNumber" runat="server" Text='<%# Eval("BOLNumber") %>'></asp:TextBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            Slabs Delivered:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <telerik:RadNumericTextBox ID="txtSlabsDelivered" runat="server" Type="Number" InvalidStyleDuration="100"
+                                                Text='<%# Eval("SlabsDelivered") %>'>
+                                                <NumberFormat AllowRounding="True" KeepNotRoundedValue="False" />
+                                            </telerik:RadNumericTextBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            Slabs PickedUp:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <telerik:RadNumericTextBox ID="txtSlabsPickedUp" runat="server" Type="Number" InvalidStyleDuration="100"
+                                                Text='<%# Eval("SlabsPickedUp") %>'>
+                                                <NumberFormat AllowRounding="True" KeepNotRoundedValue="False" />
+                                            </telerik:RadNumericTextBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            Stop Odometer:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <telerik:RadNumericTextBox ID="txtStopOdometer" runat="server" Type="Number" InvalidStyleDuration="100"
+                                                Text='<%# Eval("StopOdometer") %>'>
+                                                <NumberFormat AllowRounding="True" KeepNotRoundedValue="False" />
+                                            </telerik:RadNumericTextBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            Arrival Time:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <telerik:RadTimePicker ID="rtpArrivalTime" runat="server" Skin="Sunset" DbSelectedDate='<%# Bind("ArrivalTime") %>'>
+                                                <TimeView ID="TimeView2" Skin="Sunset" runat="server" ShowHeader="False" StartTime="00:00:00"
+                                                    Interval="00:10:00" EndTime="23:59:00" Columns="8" TimeFormat="hh:mm tt">
+                                                </TimeView>
+                                            </telerik:RadTimePicker>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            Departure Time:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <telerik:RadTimePicker ID="rtpDepartureTime" runat="server" Skin="Sunset" DbSelectedDate='<%# Bind("DepartureTime") %>'>
+                                                <TimeView ID="TimeView1" Skin="Sunset" runat="server" ShowHeader="False" StartTime="00:00:00"
+                                                    Interval="00:10:00" EndTime="23:59:00" Columns="8" TimeFormat="hh:mm tt">
+                                                </TimeView>
+                                            </telerik:RadTimePicker>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle" colspan="2">
+                                            <asp:ImageButton ID="imgUpdate" runat="server" CommandName='<%# (Container is GridEditFormInsertItem) ? "PerformInsert" : "Update" %>'
+                                                AlternateText="Update" ToolTip="Update" ImageUrl="~/App_Themes/Blue/images/savebutton.gif" />
+                                            <asp:ImageButton ID="imgCancel" runat="server" CommandName="Cancel" AlternateText="Cancel"
+                                                ToolTip="Cancel" ImageUrl="~/App_Themes/Blue/images/cancelbutton.gif" CausesValidation="false" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </FormTemplate>
+                        </EditFormSettings>
+                        <HeaderStyle HorizontalAlign="Center" />
+                        <Columns>
+                            <telerik:GridEditCommandColumn ButtonType="ImageButton" EditImageUrl="~/App_Themes/Blue/images/edit.gif"
+                                ItemStyle-Width="5px" HeaderText="Edit">
+                                <HeaderStyle Width="5px" />
+                                <ItemStyle HorizontalAlign="Center" />
+                            </telerik:GridEditCommandColumn>
+                            <telerik:GridBoundColumn DataField="StopIndex" FilterControlAltText="Filter StopIndex column"
+                                HeaderText="StopIndex" SortExpression="StopIndex" UniqueName="StopIndex" FilterControlWidth="50px"
+                                HeaderStyle-Width="50px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridBoundColumn DataField="CustomerName" FilterControlAltText="Filter CustomerName column"
+                                HeaderText="Customer Name" SortExpression="CustomerName" UniqueName="CustomerName"
+                                FilterControlWidth="100px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridBoundColumn DataField="StopType" FilterControlAltText="Filter StopType column"
+                                HeaderText="StopType" SortExpression="StopType" UniqueName="StopType" FilterControlWidth="70px"
+                                HeaderStyle-Width="70px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridBoundColumn DataField="BOLNumber" FilterControlAltText="Filter BOLNumber column"
+                                HeaderText="BOLNumber" SortExpression="BOLNumber" UniqueName="BOLNumber" FilterControlWidth="70px"
+                                HeaderStyle-Width="70px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridBoundColumn DataField="SlabsDelivered" FilterControlAltText="Filter SlabsDelivered column"
+                                HeaderText="SlabsDelivered" SortExpression="SlabsDelivered" UniqueName="SlabsDelivered"
+                                FilterControlWidth="70px" HeaderStyle-Width="70px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridBoundColumn DataField="SlabsPickedUp" FilterControlAltText="Filter SlabsPickedUp column"
+                                HeaderText="SlabsPickedUp" SortExpression="SlabsPickedUp" UniqueName="SlabsPickedUp"
+                                FilterControlWidth="70px" HeaderStyle-Width="70px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridBoundColumn DataField="StopOdometer" FilterControlAltText="Filter StopOdometer column"
+                                HeaderText="StopOdometer" SortExpression="StopOdometer" UniqueName="StopOdometer"
+                                FilterControlWidth="70px" HeaderStyle-Width="70px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridBoundColumn DataField="ArrivalTimeDisp" FilterControlAltText="Filter ArrivalTimeDisp column"
+                                HeaderText="ArrivalTime" SortExpression="ArrivalTimeDisp" UniqueName="ArrivalTimeDisp"
+                                FilterControlWidth="70px" HeaderStyle-Width="70px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridBoundColumn DataField="DepartureTime" FilterControlAltText="Filter DepartureTime column"
+                                HeaderText="DepartureTime" SortExpression="DepartureTime" UniqueName="DepartureTime"
+                                FilterControlWidth="70px" HeaderStyle-Width="70px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridTemplateColumn AllowFiltering="false" HeaderText="Created By" HeaderStyle-Width="150px">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblCreatedBy" runat="server" Text='<%# Eval("CreatedBy") + "<br/>" + Eval("CreatedOn") %>'></asp:Label>
+                                </ItemTemplate>
+                            </telerik:GridTemplateColumn>
+                            <telerik:GridTemplateColumn AllowFiltering="false" HeaderText="Modified By" HeaderStyle-Width="150px">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblModifiedBy" runat="server" Text='<%# Eval("ModifiedBy") + "<br/>" + Eval("ModifiedOn") %>'></asp:Label>
+                                </ItemTemplate>
+                            </telerik:GridTemplateColumn>
+                            <telerik:GridTemplateColumn AllowFiltering="false" HeaderText="Delete" HeaderStyle-Width="5px">
+                                <ItemStyle HorizontalAlign="Center" />
+                                <ItemTemplate>
+                                    <center>
+                                        <asp:ImageButton ToolTip='<%# ((Eval("IsActive").ToString()=="1")?"Yes":"No") %>'
+                                            ID="imgActive" runat="server" CommandArgument='<%# Eval("StopID") %>' ImageUrl='<%# "~/App_Themes/Blue/images/" + ((Eval("IsActive").ToString()=="1")?"icon_active.png":"icon_deactive.png") %>'
+                                            CausesValidation="false" OnClick="imgActiveTripStops_Click" />
+                                    </center>
+                                </ItemTemplate>
+                            </telerik:GridTemplateColumn>
+                            <telerik:GridButtonColumn ConfirmText="Are you sure want to purge this record?" ConfirmDialogType="RadWindow"
+                                ConfirmTitle="Purge Record" ButtonType="ImageButton" CommandName="Delete" Text="Purge"
+                                UniqueName="DeleteColumn" HeaderText="Purge">
+                                <ItemStyle HorizontalAlign="Center" Width="5px" />
+                                <HeaderStyle Width="5px" />
+                            </telerik:GridButtonColumn>
+                        </Columns>
+                    </MasterTableView>
+                    <PagerStyle Mode="NextPrevAndNumeric" AlwaysVisible="true" />
+                    <ClientSettings>
+                        <Selecting AllowRowSelect="True" />
+                    </ClientSettings>
+                    <FilterMenu EnableImageSprites="False">
+                    </FilterMenu>
+                </telerik:RadGrid>
+            </telerik:RadPageView>
+            <telerik:RadPageView ID="rpvTripRoutes" runat="server">
+                <table width="100%" cellpadding="5" cellspacing="5">
+                    <tr>
+                        <td align="left" valign="top">
+                            <telerik:RadGrid ID="rgTripRoutesNotSelected" runat="server" AllowFilteringByColumn="True"
+                                AllowPaging="True" AllowAutomaticDeletes="false" AllowAutomaticInserts="false"
+                                AllowAutomaticUpdates="false" ShowStatusBar="true" AllowSorting="True" AutoGenerateColumns="False"
+                                CellSpacing="0" DataSourceID="sdsTripRouteNotSelected" GridLines="None" Skin="Sunset">
+                                <HeaderContextMenu CssClass="GridContextMenu GridContextMenu_Default">
+                                </HeaderContextMenu>
+                                <MasterTableView DataSourceID="sdsTripRouteNotSelected">
+                                    <Columns>
+                                        <telerik:GridTemplateColumn HeaderText="Add" HeaderStyle-Width="5px" AllowFiltering="false">
+                                            <ItemTemplate>
+                                                <asp:ImageButton ID="imgAddTripRoutes" runat="server" ImageUrl="~/App_Themes/Blue/images/add.gif"
+                                                    CommandArgument='<%# Eval("RouteID") %>' CausesValidation="false" AlternateText="Add Routes"
+                                                    ToolTip="Add Routes" OnClick="imgAddTripRoutes_Click" />
+                                            </ItemTemplate>
+                                        </telerik:GridTemplateColumn>
+                                        <telerik:GridBoundColumn DataField="StateName" FilterControlAltText="Filter StateName column"
+                                            HeaderText="StateName" SortExpression="StateName" UniqueName="StateName" FilterControlWidth="150px"
+                                            HeaderStyle-Width="150px">
+                                        </telerik:GridBoundColumn>
+                                        <telerik:GridBoundColumn DataField="RouteName" FilterControlAltText="Filter RouteName column"
+                                            HeaderText="RouteName" SortExpression="RouteName" UniqueName="RouteName" FilterControlWidth="150px"
+                                            HeaderStyle-Width="150px">
+                                        </telerik:GridBoundColumn>
+                                    </Columns>
+                                </MasterTableView>
+                                <PagerStyle Mode="NextPrevAndNumeric" AlwaysVisible="true" />
+                                <ClientSettings>
+                                    <Selecting AllowRowSelect="True" />
+                                </ClientSettings>
+                                <FilterMenu EnableImageSprites="False">
+                                </FilterMenu>
+                            </telerik:RadGrid>
+                        </td>
+                        <td align="left" valign="top">
+                            <telerik:RadGrid ID="rgTripRoutes" runat="server" AllowFilteringByColumn="True" AllowPaging="True"
+                                AllowAutomaticDeletes="true" AllowAutomaticInserts="false" AllowAutomaticUpdates="false"
+                                ShowStatusBar="true" AllowSorting="True" AutoGenerateColumns="False" CellSpacing="0"
+                                DataSourceID="sdsTripRoutes" GridLines="None" Skin="Sunset" OnItemDeleted="rgTripRoutes_ItemDeleted">
+                                <HeaderContextMenu CssClass="GridContextMenu GridContextMenu_Default">
+                                </HeaderContextMenu>
+                                <MasterTableView DataSourceID="sdsTripRoutes" DataKeyNames="TripRouteID">
+                                    <Columns>
+                                        <telerik:GridBoundColumn DataField="StateName" FilterControlAltText="Filter StateName column"
+                                            HeaderText="StateName" SortExpression="StateName" UniqueName="StateName" FilterControlWidth="150px"
+                                            HeaderStyle-Width="150px">
+                                        </telerik:GridBoundColumn>
+                                        <telerik:GridBoundColumn DataField="RouteName" FilterControlAltText="Filter RouteName column"
+                                            HeaderText="RouteName" SortExpression="RouteName" UniqueName="RouteName" FilterControlWidth="150px"
+                                            HeaderStyle-Width="150px">
+                                        </telerik:GridBoundColumn>
+                                        <telerik:GridTemplateColumn AllowFiltering="false" HeaderText="Delete" HeaderStyle-Width="5px">
+                                            <ItemStyle HorizontalAlign="Center" />
+                                            <ItemTemplate>
+                                                <center>
+                                                    <asp:ImageButton ToolTip='<%# ((Eval("IsActive").ToString()=="1")?"Yes":"No") %>'
+                                                        ID="imgActive" runat="server" CommandArgument='<%# Eval("TripRouteID") %>' ImageUrl='<%# "~/App_Themes/Blue/images/" + ((Eval("IsActive").ToString()=="1")?"icon_active.png":"icon_deactive.png") %>'
+                                                        CausesValidation="false" OnClick="imgActiveTripRoutes_Click" />
+                                                </center>
+                                            </ItemTemplate>
+                                        </telerik:GridTemplateColumn>
+                                        <telerik:GridButtonColumn ConfirmText="Are you sure want to purge this record?" ConfirmDialogType="RadWindow"
+                                            ConfirmTitle="Purge Record" ButtonType="ImageButton" CommandName="Delete" Text="Purge"
+                                            UniqueName="DeleteColumn" HeaderText="Purge" HeaderStyle-Width="5px">
+                                            <ItemStyle HorizontalAlign="Center" Width="5px" />
+                                        </telerik:GridButtonColumn>
+                                    </Columns>
+                                </MasterTableView>
+                                <PagerStyle Mode="NextPrevAndNumeric" AlwaysVisible="true" />
+                                <ClientSettings>
+                                    <Selecting AllowRowSelect="True" />
+                                </ClientSettings>
+                                <FilterMenu EnableImageSprites="False">
+                                </FilterMenu>
+                            </telerik:RadGrid>
+                        </td>
+                    </tr>
+                </table>
+            </telerik:RadPageView>
+            <telerik:RadPageView ID="rpvTripIncidents" runat="server">
+                <telerik:RadGrid ID="rgTripIncidents" runat="server" AllowFilteringByColumn="True"
+                    AllowPaging="True" AllowAutomaticDeletes="true" AllowAutomaticInserts="false"
+                    AllowAutomaticUpdates="true" ShowStatusBar="true" AllowSorting="True" AutoGenerateColumns="False"
+                    CellSpacing="0" DataSourceID="sdsTripIncidents" GridLines="None" Skin="Sunset"
+                    OnInsertCommand="TripIncidents_InsertCommand" OnUpdateCommand="TripIncidents_UpdateCommand"
+                    OnItemDeleted="TripIncidents_ItemDeleted">
+                    <HeaderContextMenu CssClass="GridContextMenu GridContextMenu_Default">
+                    </HeaderContextMenu>
+                    <MasterTableView DataSourceID="sdsTripIncidents" DataKeyNames="IncidentID" CommandItemDisplay="Top">
+                        <EditFormSettings EditFormType="Template">
+                            <FormTemplate>
+                                <h1>
+                                    Trip-Incident Details
+                                </h1>
+                                <hr />
+                                <table cellpadding="2" cellspacing="2">
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            Incident Date:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <telerik:RadDatePicker ID="rdtpIncidentDate" runat="server" TabIndex="3" Culture="English (United States)"
+                                                Skin="Sunset" DbSelectedDate='<%# Bind("IncidentDate") %>'>
+                                                <Calendar ID="Calendar3" Skin="Sunset" runat="server" UseColumnHeadersAsSelectors="True"
+                                                    UseRowHeadersAsSelectors="True">
+                                                </Calendar>
+                                                <DateInput ID="DateInput3" InvalidStyleDuration="100" runat="server" LabelCssClass="radLabelCss_Sunset"
+                                                    Skin="Sunset" Width="" DateFormat="MM-dd-yyyy" DisplayDateFormat="MM-dd-yyyy"
+                                                    Font-Bold="true" ForeColor="Black">
+                                                </DateInput>
+                                                <DatePopupButton CssClass="" />
+                                            </telerik:RadDatePicker>
+                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="rdtpIncidentDate"
+                                                SetFocusOnError="true" Display="Dynamic" ErrorMessage="Enter Incident Date"></asp:RequiredFieldValidator>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            Incident Type:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <telerik:RadComboBox ID="rcmbIncidentTypes" runat="server" DataSourceID="sdsIncidentTypes"
+                                                DataTextField="IncidentType" DataValueField="IncidentTypeID" MarkFirstMatch="true"
+                                                SelectedValue='<%# Eval("IncidentTypeID") %>'>
+                                            </telerik:RadComboBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            State Name:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <telerik:RadComboBox ID="rcmbStateName" runat="server" DataSourceID="sdsStateName"
+                                                DataTextField="StateName" DataValueField="StateID" MarkFirstMatch="true" SelectedValue='<%# Eval("StateID") %>'>
+                                            </telerik:RadComboBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            Remarks:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <asp:TextBox ID="txtRemarks" runat="server" Text='<%# Eval("Remarks") %>'></asp:TextBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle" colspan="2">
+                                            <asp:ImageButton ID="imgUpdate" runat="server" CommandName='<%# (Container is GridEditFormInsertItem) ? "PerformInsert" : "Update" %>'
+                                                AlternateText="Update" ToolTip="Update" ImageUrl="~/App_Themes/Blue/images/savebutton.gif" />
+                                            <asp:ImageButton ID="imgCancel" runat="server" CommandName="Cancel" AlternateText="Cancel"
+                                                ToolTip="Cancel" ImageUrl="~/App_Themes/Blue/images/cancelbutton.gif" CausesValidation="false" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </FormTemplate>
+                        </EditFormSettings>
+                        <HeaderStyle HorizontalAlign="Center" />
+                        <Columns>
+                            <telerik:GridEditCommandColumn ButtonType="ImageButton" EditImageUrl="~/App_Themes/Blue/images/edit.gif"
+                                ItemStyle-Width="5px" HeaderText="Edit">
+                                <ItemStyle HorizontalAlign="Center" />
+                                <HeaderStyle Width="5px" />
+                            </telerik:GridEditCommandColumn>
+                            <telerik:GridBoundColumn DataField="IncidentDateDisp" FilterControlAltText="Filter IncidentDateDisp column"
+                                HeaderText="Date" SortExpression="IncidentDateDisp" UniqueName="IncidentDateDisp"
+                                FilterControlWidth="70px" HeaderStyle-Width="70px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridBoundColumn DataField="IncidentType" FilterControlAltText="Filter IncidentType column"
+                                HeaderText="IncidentType" SortExpression="IncidentType" UniqueName="IncidentType"
+                                FilterControlWidth="100px" HeaderStyle-Width="100px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridBoundColumn DataField="StateName" FilterControlAltText="Filter StateName column"
+                                HeaderText="State Name" SortExpression="StateName" UniqueName="StateName" FilterControlWidth="100px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridBoundColumn DataField="Remarks" FilterControlAltText="Filter Remarks column"
+                                HeaderText="Remarks" SortExpression="Remarks" UniqueName="Remarks" FilterControlWidth="200px"
+                                HeaderStyle-Width="200px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridTemplateColumn AllowFiltering="false" HeaderText="Created By" HeaderStyle-Width="150px">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblCreatedBy" runat="server" Text='<%# Eval("CreatedBy") + "<br/>" + Eval("CreatedOn") %>'></asp:Label>
+                                </ItemTemplate>
+                            </telerik:GridTemplateColumn>
+                            <telerik:GridTemplateColumn AllowFiltering="false" HeaderText="Modified By" HeaderStyle-Width="150px">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblModifiedBy" runat="server" Text='<%# Eval("ModifiedBy") + "<br/>" + Eval("ModifiedOn") %>'></asp:Label>
+                                </ItemTemplate>
+                            </telerik:GridTemplateColumn>
+                            <telerik:GridTemplateColumn AllowFiltering="false" HeaderText="Delete" HeaderStyle-Width="5px">
+                                <ItemStyle HorizontalAlign="Center" />
+                                <ItemTemplate>
+                                    <center>
+                                        <asp:ImageButton ToolTip='<%# ((Eval("IsActive").ToString()=="1")?"Yes":"No") %>'
+                                            ID="imgActive" runat="server" CommandArgument='<%# Eval("IncidentID") %>' ImageUrl='<%# "~/App_Themes/Blue/images/" + ((Eval("IsActive").ToString()=="1")?"icon_active.png":"icon_deactive.png") %>'
+                                            CausesValidation="false" OnClick="imgActiveTripIncident_Click" />
+                                    </center>
+                                </ItemTemplate>
+                            </telerik:GridTemplateColumn>
+                            <telerik:GridButtonColumn ConfirmText="Are you sure want to purge this record?" ConfirmDialogType="RadWindow"
+                                ConfirmTitle="Purge Record" ButtonType="ImageButton" CommandName="Delete" Text="Purge"
+                                UniqueName="DeleteColumn" HeaderText="Purge">
+                                <ItemStyle HorizontalAlign="Center" Width="5px" />
+                                <HeaderStyle Width="5px" />
+                            </telerik:GridButtonColumn>
+                        </Columns>
+                    </MasterTableView>
+                    <PagerStyle Mode="NextPrevAndNumeric" AlwaysVisible="true" />
+                    <ClientSettings>
+                        <Selecting AllowRowSelect="True" />
+                    </ClientSettings>
+                    <FilterMenu EnableImageSprites="False">
+                    </FilterMenu>
+                </telerik:RadGrid>
+            </telerik:RadPageView>
+            <telerik:RadPageView ID="rpvStateTravelled" runat="server">
+                <telerik:RadGrid ID="rgStateTravelled" runat="server" AllowFilteringByColumn="True"
+                    AllowPaging="True" AllowAutomaticDeletes="true" AllowAutomaticInserts="false"
+                    AllowAutomaticUpdates="true" ShowStatusBar="true" AllowSorting="True" AutoGenerateColumns="False"
+                    CellSpacing="0" DataSourceID="sdsStateTravelled" GridLines="None" Skin="Sunset"
+                    OnInsertCommand="StateTravelled_InsertCommand" OnUpdateCommand="StateTravelled_UpdateCommand"
+                    OnItemDeleted="StateTravelled_ItemDeleted">
+                    <HeaderContextMenu CssClass="GridContextMenu GridContextMenu_Default">
+                    </HeaderContextMenu>
+                    <MasterTableView DataSourceID="sdsStateTravelled" DataKeyNames="TravelledID" CommandItemDisplay="Top">
+                        <EditFormSettings EditFormType="Template">
+                            <FormTemplate>
+                                <h1>
+                                    State Travelled</h1>
+                                <hr />
+                                <table cellpadding="2" cellspacing="2">
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            State Name:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <telerik:RadComboBox ID="rcmbStateName" runat="server" DataSourceID="sdsStateName"
+                                                DataTextField="StateName" DataValueField="StateID" MarkFirstMatch="true" SelectedValue='<%# Eval("StateID") %>'>
+                                            </telerik:RadComboBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            Start Odometer:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <telerik:RadNumericTextBox ID="txtStartOdometer" runat="server" Type="Number" InvalidStyleDuration="100"
+                                                Text='<%# Eval("StartOdometer") %>'>
+                                                <NumberFormat AllowRounding="True" KeepNotRoundedValue="False" />
+                                            </telerik:RadNumericTextBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle">
+                                            End Odometer:
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <telerik:RadNumericTextBox ID="txtEndOdometer" runat="server" Type="Number" InvalidStyleDuration="100"
+                                                Text='<%# Eval("EndOdometer") %>'>
+                                                <NumberFormat AllowRounding="True" KeepNotRoundedValue="False" />
+                                            </telerik:RadNumericTextBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle" colspan="2">
+                                            <asp:ImageButton ID="imgUpdate" runat="server" CommandName='<%# (Container is GridEditFormInsertItem) ? "PerformInsert" : "Update" %>'
+                                                AlternateText="Update" ToolTip="Update" ImageUrl="~/App_Themes/Blue/images/savebutton.gif" />
+                                            <asp:ImageButton ID="imgCancel" runat="server" CommandName="Cancel" AlternateText="Cancel"
+                                                ToolTip="Cancel" ImageUrl="~/App_Themes/Blue/images/cancelbutton.gif" CausesValidation="false" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </FormTemplate>
+                        </EditFormSettings>
+                        <HeaderStyle HorizontalAlign="Center" />
+                        <Columns>
+                            <telerik:GridEditCommandColumn ButtonType="ImageButton" EditImageUrl="~/App_Themes/Blue/images/edit.gif"
+                                ItemStyle-Width="5px" HeaderText="Edit">
+                                <ItemStyle HorizontalAlign="Center" />
+                                <HeaderStyle Width="5px" />
+                            </telerik:GridEditCommandColumn>
+                            <telerik:GridBoundColumn DataField="StateName" FilterControlAltText="Filter StateName column"
+                                HeaderText="State Name" SortExpression="StateName" UniqueName="StateName" FilterControlWidth="200px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridBoundColumn DataField="StartOdometer" FilterControlAltText="Filter StartOdometer column"
+                                HeaderText="StartOdometer" SortExpression="StartOdometer" UniqueName="StartOdometer"
+                                FilterControlWidth="70px" HeaderStyle-Width="70px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridBoundColumn DataField="EndOdometer" FilterControlAltText="Filter EndOdometer column"
+                                HeaderText="EndOdometer" SortExpression="EndOdometer" UniqueName="EndOdometer"
+                                FilterControlWidth="70px" HeaderStyle-Width="70px">
+                            </telerik:GridBoundColumn>
+                            <telerik:GridTemplateColumn AllowFiltering="false" HeaderText="Created By" HeaderStyle-Width="150px">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblCreatedBy" runat="server" Text='<%# Eval("CreatedBy") + "<br/>" + Eval("CreatedOn") %>'></asp:Label>
+                                </ItemTemplate>
+                            </telerik:GridTemplateColumn>
+                            <telerik:GridTemplateColumn AllowFiltering="false" HeaderText="Modified By" HeaderStyle-Width="150px">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblModifiedBy" runat="server" Text='<%# Eval("ModifiedBy") + "<br/>" + Eval("ModifiedOn") %>'></asp:Label>
+                                </ItemTemplate>
+                            </telerik:GridTemplateColumn>
+                            <telerik:GridTemplateColumn AllowFiltering="false" HeaderText="Delete" HeaderStyle-Width="5px">
+                                <ItemStyle HorizontalAlign="Center" />
+                                <ItemTemplate>
+                                    <center>
+                                        <asp:ImageButton ToolTip='<%# ((Eval("IsActive").ToString()=="1")?"Yes":"No") %>'
+                                            ID="imgActive" runat="server" CommandArgument='<%# Eval("TravelledID") %>' ImageUrl='<%# "~/App_Themes/Blue/images/" + ((Eval("IsActive").ToString()=="1")?"icon_active.png":"icon_deactive.png") %>'
+                                            CausesValidation="false" OnClick="imgActiveStateTravelled_Click" />
+                                    </center>
+                                </ItemTemplate>
+                            </telerik:GridTemplateColumn>
+                            <telerik:GridButtonColumn ConfirmText="Are you sure want to purge this record?" ConfirmDialogType="RadWindow"
+                                ConfirmTitle="Purge Record" ButtonType="ImageButton" CommandName="Delete" Text="Purge"
+                                UniqueName="DeleteColumn" HeaderText="Purge">
+                                <ItemStyle HorizontalAlign="Center" Width="5px" />
+                                <HeaderStyle Width="5px" />
+                            </telerik:GridButtonColumn>
+                        </Columns>
+                    </MasterTableView>
+                    <PagerStyle Mode="NextPrevAndNumeric" AlwaysVisible="true" />
+                    <ClientSettings>
+                        <Selecting AllowRowSelect="True" />
+                    </ClientSettings>
+                    <FilterMenu EnableImageSprites="False">
+                    </FilterMenu>
+                </telerik:RadGrid>
+            </telerik:RadPageView>
+        </telerik:RadMultiPage>
+    </telerik:RadAjaxPanel>
+    <telerik:RadAjaxLoadingPanel ID="RadAjaxLoadingPanel1" runat="server" Height="75px"
+        Width="75px" Transparency="1">
+    </telerik:RadAjaxLoadingPanel>
+    <asp:SqlDataSource ID="sdsAddEditRecords" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnString %>"
+        UpdateCommand="KRV_UpdateTrips" UpdateCommandType="StoredProcedure" DeleteCommand="KRV_DeleteTrips"
+        DeleteCommandType="StoredProcedure" InsertCommand="KRV_AddTrips" InsertCommandType="StoredProcedure"
+        SelectCommand="KRV_GetTrips" SelectCommandType="StoredProcedure" CancelSelectOnNullParameter="False">
+        <DeleteParameters>
+            <asp:Parameter Name="TripID" Type="Int32" DefaultValue="0" />
+        </DeleteParameters>
+        <UpdateParameters>
+            <asp:Parameter Name="TripID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="TripDate" Type="DateTime" ConvertEmptyStringToNull="true" />
+            <asp:Parameter Name="DriverID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="TruckID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="TripTypeID" Type="Int32" DefaultValue="0"></asp:Parameter>
+            <asp:Parameter Name="TripStart" Type="DateTime" ConvertEmptyStringToNull="true" />
+            <asp:Parameter Name="TripEnd" Type="DateTime" ConvertEmptyStringToNull="true" />
+            <asp:Parameter Name="StartOdometer" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="EndOdometer" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="UserName" Type="String" />
+        </UpdateParameters>
+        <InsertParameters>
+            <asp:Parameter Name="TripDate" Type="DateTime" ConvertEmptyStringToNull="true" />
+            <asp:Parameter Name="DriverID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="TruckID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="TripTypeID" Type="Int32" DefaultValue="0"></asp:Parameter>
+            <asp:Parameter Name="TripStart" Type="DateTime" ConvertEmptyStringToNull="true" />
+            <asp:Parameter Name="TripEnd" Type="DateTime" ConvertEmptyStringToNull="true" />
+            <asp:Parameter Name="StartOdometer" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="EndOdometer" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="UserName" Type="String" />
+        </InsertParameters>
+    </asp:SqlDataSource>
+    <asp:SqlDataSource ID="sdsSoftDelete" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnString %>"
+        UpdateCommand="KRV_SoftDeleteTrips" UpdateCommandType="StoredProcedure">
+        <UpdateParameters>
+            <asp:Parameter Name="TripID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="UserName" Type="String" />
+        </UpdateParameters>
+    </asp:SqlDataSource>
+    <asp:SqlDataSource ID="sdsTrucks" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnString %>"
+        SelectCommand="SELECT TruckID,TruckNo FROM Trucks" SelectCommandType="Text" CancelSelectOnNullParameter="false">
+    </asp:SqlDataSource>
+    <asp:SqlDataSource ID="sdsDrivers" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnString %>"
+        SelectCommand="SELECT DriverID,DriverName FROM Drivers" SelectCommandType="Text"
+        CancelSelectOnNullParameter="false"></asp:SqlDataSource>
+    <asp:SqlDataSource ID="sdsTripTypes" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnString %>"
+        SelectCommand="SELECT TripTypeID,TripType FROM TripTypes" SelectCommandType="Text"
+        CancelSelectOnNullParameter="false"></asp:SqlDataSource>
+    <asp:SqlDataSource ID="sdsTripStops" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnString %>"
+        UpdateCommand="KRV_UpdateTripStops" UpdateCommandType="StoredProcedure" DeleteCommand="KRV_DeleteTripStops"
+        DeleteCommandType="StoredProcedure" InsertCommand="KRV_AddTripStops" InsertCommandType="StoredProcedure"
+        SelectCommand="KRV_GetTripStops" SelectCommandType="StoredProcedure" CancelSelectOnNullParameter="False">
+        <SelectParameters>
+            <asp:Parameter DefaultValue="0" Name="TripID" Type="Int32" />
+        </SelectParameters>
+        <DeleteParameters>
+            <asp:Parameter Name="StopID" Type="Int32" />
+        </DeleteParameters>
+        <UpdateParameters>
+            <asp:Parameter Name="StopID" Type="Int32" />
+            <asp:Parameter Name="StopIndex" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="CustomerID" Type="Int32" DefaultValue="0"></asp:Parameter>
+            <asp:Parameter Name="StopTypeID" Type="Int32" ConvertEmptyStringToNull="true" />
+            <asp:Parameter Name="BOLNumber" Type="String" />
+            <asp:Parameter Name="SlabsDelivered" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="SlabsPickedUp" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="StopOdometer" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="ArrivalTime" Type="DateTime" ConvertEmptyStringToNull="true" />
+            <asp:Parameter Name="DepartureTime" Type="DateTime" ConvertEmptyStringToNull="true" />
+            <asp:Parameter Name="UserName" Type="String" />
+        </UpdateParameters>
+        <InsertParameters>
+            <asp:Parameter Name="TripID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="StopIndex" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="CustomerID" Type="Int32" DefaultValue="0"></asp:Parameter>
+            <asp:Parameter Name="StopTypeID" Type="Int32" ConvertEmptyStringToNull="true" />
+            <asp:Parameter Name="BOLNumber" Type="String" />
+            <asp:Parameter Name="SlabsDelivered" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="SlabsPickedUp" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="StopOdometer" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="ArrivalTime" Type="DateTime" ConvertEmptyStringToNull="true" />
+            <asp:Parameter Name="DepartureTime" Type="DateTime" ConvertEmptyStringToNull="true" />
+            <asp:Parameter Name="UserName" Type="String" />
+        </InsertParameters>
+    </asp:SqlDataSource>
+    <asp:SqlDataSource ID="sdsSoftDeleteTripStops" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnString %>"
+        UpdateCommand="KRV_SoftDeleteTripStops" UpdateCommandType="StoredProcedure">
+        <UpdateParameters>
+            <asp:Parameter Name="StopID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="UserName" Type="String" />
+        </UpdateParameters>
+    </asp:SqlDataSource>
+    <asp:SqlDataSource ID="sdsCustomers" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnString %>"
+        SelectCommand="SELECT CustomerID,CustomerName FROM Customers" SelectCommandType="Text"
+        CancelSelectOnNullParameter="false"></asp:SqlDataSource>
+    <asp:SqlDataSource ID="sdsStopTypes" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnString %>"
+        SelectCommand="SELECT StopTypeID,StopType FROM StopTypes" SelectCommandType="Text"
+        CancelSelectOnNullParameter="false"></asp:SqlDataSource>
+    <asp:SqlDataSource ID="sdsTripRoutes" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnString %>"
+        SelectCommand="KRV_GetTripRoutes" SelectCommandType="StoredProcedure" CancelSelectOnNullParameter="false"
+        UpdateCommand="KRV_SoftDeleteTripRoutes" UpdateCommandType="StoredProcedure"
+        DeleteCommand="KRV_DeleteTripRoutes" DeleteCommandType="StoredProcedure">
+        <SelectParameters>
+            <asp:Parameter Name="TripID" Type="Int32" DefaultValue="0" />
+        </SelectParameters>
+        <UpdateParameters>
+            <asp:Parameter Name="TripRouteID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="UserName" Type="String" />
+        </UpdateParameters>
+        <DeleteParameters>
+            <asp:Parameter Name="TripRouteID" Type="Int32" DefaultValue="0" />
+        </DeleteParameters>
+    </asp:SqlDataSource>
+    <asp:SqlDataSource ID="sdsTripRouteNotSelected" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnString %>"
+        SelectCommand="KRV_GetTripRoutesNotSelected" SelectCommandType="StoredProcedure"
+        CancelSelectOnNullParameter="false" InsertCommand="KRV_AddTripRoutes" InsertCommandType="StoredProcedure">
+        <SelectParameters>
+            <asp:Parameter Name="TripID" Type="Int32" DefaultValue="0" />
+        </SelectParameters>
+        <InsertParameters>
+            <asp:Parameter Name="TripID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="RouteID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="UserName" Type="String" />
+        </InsertParameters>
+    </asp:SqlDataSource>
+    <asp:SqlDataSource ID="sdsStateTravelled" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnString %>"
+        UpdateCommand="KRV_UpdateStateTravelled" UpdateCommandType="StoredProcedure"
+        DeleteCommand="KRV_DeleteStateTravelled" DeleteCommandType="StoredProcedure"
+        InsertCommand="KRV_AddStateTravelled" InsertCommandType="StoredProcedure" SelectCommand="KRV_GetStateTravelled"
+        SelectCommandType="StoredProcedure" CancelSelectOnNullParameter="False">
+        <SelectParameters>
+            <asp:Parameter Name="TripID" Type="Int32" DefaultValue="0" />
+        </SelectParameters>
+        <DeleteParameters>
+            <asp:Parameter Name="TravelledID" Type="Int32" DefaultValue="0" />
+        </DeleteParameters>
+        <UpdateParameters>
+            <asp:Parameter Name="TravelledID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="StateID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="StartOdometer" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="EndOdometer" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="UserName" Type="String" />
+        </UpdateParameters>
+        <InsertParameters>
+            <asp:Parameter Name="TripID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="StateID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="StartOdometer" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="EndOdometer" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="UserName" Type="String" />
+        </InsertParameters>
+    </asp:SqlDataSource>
+    <asp:SqlDataSource ID="sdsSoftDeleteStateTravelled" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnString %>"
+        UpdateCommand="KRV_SoftDeleteStateTravelled" UpdateCommandType="StoredProcedure">
+        <UpdateParameters>
+            <asp:Parameter Name="TravelledID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="UserName" Type="String" />
+        </UpdateParameters>
+    </asp:SqlDataSource>
+    <asp:SqlDataSource ID="sdsStateName" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnString %>"
+        SelectCommand="SELECT StateID,StateName FROM StateList" SelectCommandType="Text"
+        CancelSelectOnNullParameter="false"></asp:SqlDataSource>
+    <asp:SqlDataSource ID="sdsIncidentTypes" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnString %>"
+        SelectCommand="SELECT IncidentTypeID,IncidentType FROM IncidentTypes" SelectCommandType="Text"
+        CancelSelectOnNullParameter="false"></asp:SqlDataSource>
+    <asp:SqlDataSource ID="sdsTripIncidents" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnString %>"
+        UpdateCommand="KRV_UpdateTripIncidents" UpdateCommandType="StoredProcedure" DeleteCommand="KRV_DeleteTripIncidents"
+        DeleteCommandType="StoredProcedure" InsertCommand="KRV_AddTripIncidents" InsertCommandType="StoredProcedure"
+        SelectCommand="KRV_GetTripIncidents" SelectCommandType="StoredProcedure" CancelSelectOnNullParameter="False">
+        <SelectParameters>
+            <asp:Parameter Name="TripID" Type="Int32" DefaultValue="0" />
+        </SelectParameters>
+        <DeleteParameters>
+            <asp:Parameter Name="IncidentID" Type="Int32" DefaultValue="0" />
+        </DeleteParameters>
+        <UpdateParameters>
+            <asp:Parameter Name="IncidentID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="IncidentDate" Type="DateTime" ConvertEmptyStringToNull="true" />
+            <asp:Parameter Name="IncidentTypeID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="StateID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="Remarks" Type="String" />
+            <asp:Parameter Name="UserName" Type="String" />
+        </UpdateParameters>
+        <InsertParameters>
+            <asp:Parameter Name="TripID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="IncidentDate" Type="DateTime" ConvertEmptyStringToNull="true" />
+            <asp:Parameter Name="IncidentTypeID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="StateID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="Remarks" Type="String" />
+            <asp:Parameter Name="UserName" Type="String" />
+        </InsertParameters>
+    </asp:SqlDataSource>
+    <asp:SqlDataSource ID="sdsSoftDeleteTripIncident" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnString %>"
+        UpdateCommand="KRV_SoftDeleteTripIncidents" UpdateCommandType="StoredProcedure">
+        <UpdateParameters>
+            <asp:Parameter Name="IncidentID" Type="Int32" DefaultValue="0" />
+            <asp:Parameter Name="UserName" Type="String" />
+        </UpdateParameters>
+    </asp:SqlDataSource>
+</asp:Content>
